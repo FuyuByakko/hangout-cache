@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"hangout-cache/cache"
+	"hangout-cache/structs"
 	"log"
 	"net/http"
 )
@@ -49,10 +50,20 @@ func reqHandler(w http.ResponseWriter, r *http.Request) {
 func writeToCache(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method)
 	fmt.Fprintf(w, "POST endpoint reached")
-	//optional:
 	keys := r.URL.Query()
 	hashNr := keys.Get("key") // < returns empty string if not found.
-	cache.Add(hashNr, "Hello!!")
+	log.Printf("Hash Nr %s", hashNr)
+
+	var data structs.EventsAndHotels
+	log.Println(r.Body)
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	// json.NewEncoder(w).Encode(data)
+	// fmt.Fprintf(w, data)
+	cache.Add(hashNr, data)
 }
 
 func checkCache(w http.ResponseWriter, r *http.Request) {
@@ -66,13 +77,11 @@ func checkCache(w http.ResponseWriter, r *http.Request) {
 	hashNr := keys[0]
 
 	//check the cache for the hash key
-	response := cache.Get(hashNr)
-	if response != "" {
+	response, err := cache.Get(hashNr)
+	if err == nil {
 		log.Printf("Found Hash Nr %s in the cache, returning associated Value", hashNr)
 	}
 	json.NewEncoder(w).Encode(response)
-
-	// fmt.Fprintf(w, "THIS IS A RESPONSE! Hello from port %s!\nHash is %s", serverPort, hashNr)
 }
 
 func defaultGreet(w http.ResponseWriter, r *http.Request) {

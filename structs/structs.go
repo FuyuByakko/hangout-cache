@@ -29,9 +29,9 @@ type EventsAndHotels struct {
 	Hotels []Hotel `json:"Hotel"`
 }
 
-func New() *EventsAndHotels {
-	return &EventsAndHotels{}
-}
+// func New() *EventsAndHotels {
+// 	return &EventsAndHotels
+// }
 
 func TestResponse() EventsAndHotels {
 	return EventsAndHotels{

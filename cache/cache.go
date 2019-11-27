@@ -1,15 +1,30 @@
 package cache
 
-// var Cache = make(map[string] EventsAndHotels)
-var Cache = make(map[string]string)
+import (
+	"hangout-cache/structs"
+	"log"
+)
 
-// var Cache = make(map[string]string)
+var testEvents = structs.TestResponse().Events
+var testHotels = structs.TestResponse().Hotels
+var EventsAndHotes = structs.EventsAndHotels{testEvents, testHotels}
 
-func Get(key string) string {
-	return Cache[key]
+var Cache = make(map[string]structs.EventsAndHotels)
+
+// func CreateCache() *cache {
+// 	var Cache = make(map[string]structs.EventsAndHotels)
+// 	return &cache
+// }
+
+func Get(key string) (structs.EventsAndHotels, error) {
+	Cache["test"] = EventsAndHotes
+	// if Cache[key] != ""
+	return Cache[key], nil
 }
 
-func Add(k string, s string) {
+func Add(k string, s structs.EventsAndHotels) {
+	log.Println(k)
+	log.Println(s)
 	Cache[k] = s
 }
 
