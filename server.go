@@ -7,10 +7,11 @@ import (
 	"hangout-cache/structs"
 	"log"
 	"net/http"
+	"os"
 )
 
 var (
-	serverPort = ":9000"
+	serverPort = os.Getenv("PORT")
 	version    = "v1"
 )
 
@@ -36,6 +37,9 @@ func StartServer() {
 	fmt.Println("Setting Up Server")
 	http.HandleFunc("/", defaultGreet)
 	http.HandleFunc("/api/v1/contents/", reqHandler)
+	if serverPort == "" {
+		serverPort = ":9000"
+	}
 	log.Fatal(http.ListenAndServe(serverPort, nil))
 }
 
