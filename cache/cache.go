@@ -1,33 +1,22 @@
 package cache
 
 import (
-	"hangout-cache/structs"
-	"log"
+	"errors"
 )
 
-var testEvents = structs.TestResponse().Events
-var testHotels = structs.TestResponse().Hotels
-var EventsAndHotes = structs.EventsAndHotels{testEvents, testHotels}
+var Cache = make(map[string]string)
 
-var Cache = make(map[string]structs.EventsAndHotels)
-
-// func CreateCache() *cache {
-// 	var Cache = make(map[string]structs.EventsAndHotels)
-// 	return &cache
-// }
-
-func Get(key string) (structs.EventsAndHotels, error) {
-	// Cache["test"] = EventsAndHotes
-	return Cache[key], nil
+func Get(key string) string {
+	return Cache[key]
 }
 
-func Add(k string, s structs.EventsAndHotels) {
-	log.Println(k)
-	log.Println(s)
-	Cache[k] = s
+// func Add(k string, s structs.EventsAndHotels) {
+func Add(k string, info string) error {
+	Cache[k] = info
+	check := Cache[k]
+	if check != "" {
+		return nil
+	} else {
+		return errors.New("Writing of data for key %s failed.\n")
+	}
 }
-
-// func (ev *EventsAndHotels) Add(event Event, hotel Hotel) {
-// 	ev.Events = append(ev.Events, event);
-// 	ev.Hotels = append(ev.Hotels, hotel);
-// }
