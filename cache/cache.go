@@ -17,8 +17,7 @@ var Cache = make(map[string]structs.EventsAndHotels)
 // }
 
 func Get(key string) (structs.EventsAndHotels, error) {
-	Cache["test"] = EventsAndHotes
-	// if Cache[key] != ""
+	// Cache["test"] = EventsAndHotes
 	return Cache[key], nil
 }
 

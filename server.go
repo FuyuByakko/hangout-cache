@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	serverPort = os.Getenv("PORT")
+	serverPort = ":" + os.Getenv("PORT")
 	version    = "v1"
 )
 
@@ -37,7 +37,7 @@ func StartServer() {
 	fmt.Println("Setting Up Server")
 	http.HandleFunc("/", defaultGreet)
 	http.HandleFunc("/api/v1/contents/", reqHandler)
-	if serverPort == "" {
+	if serverPort == ":" {
 		serverPort = ":9000"
 	}
 	log.Fatal(http.ListenAndServe(serverPort, nil))
@@ -59,14 +59,13 @@ func writeToCache(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Hash Nr %s", hashNr)
 
 	var data structs.EventsAndHotels
-	log.Println(r.Body)
+	// log.Println(r.Body)
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	// json.NewEncoder(w).Encode(data)
-	// fmt.Fprintf(w, data)
+
 	cache.Add(hashNr, data)
 }
 
